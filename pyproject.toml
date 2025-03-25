@@ -1,0 +1,16 @@
+[project]
+name = "ai-news"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.1.0",
+    "flask-cors>=5.0.1",
+    "groq>=0.20.0",
+    "json5>=0.10.0",
+    "langchain-groq>=0.3.1",
+    "langgraph>=0.3.18",
+    "python-dotenv>=1.0.1",
+    "tavily-python>=0.5.1",
+]

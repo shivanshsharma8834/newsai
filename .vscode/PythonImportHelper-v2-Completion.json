@@ -1,0 +1,38 @@
+[
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "MasterAgent",
+        "kind": 6,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "class MasterAgent:\n    def __init__(self):\n        self.outputDir = f\"output/run_{int(time.time())}\"\n        os.makedirs(self.outputDir, exist_ok=True)\n    def run(self, queries: list, layout: str):\n        workflow = Graph()\nif __name__ == \"__main__\":\n    main()",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def main():\n    print(\"Hello from voice-ai!\")\nclass MasterAgent:\n    def __init__(self):\n        self.outputDir = f\"output/run_{int(time.time())}\"\n        os.makedirs(self.outputDir, exist_ok=True)\n    def run(self, queries: list, layout: str):\n        workflow = Graph()\nif __name__ == \"__main__\":\n    main()",
+        "detail": "main",
+        "documentation": {}
+    }
+]
