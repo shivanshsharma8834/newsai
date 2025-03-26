@@ -6,8 +6,9 @@ from typing import Dict, TypedDict
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from langgraph.graph import Graph, START, END
-from agents import search
-from backend.agents.curator import CuratorAgent
+from agents.search import SearchAgent
+from agents.curator import SourceCuratorAgent
+from agents.scrapper import WebScrapperAgent
 
 
 
@@ -23,15 +24,25 @@ class MasterAgent:
 
         workflow = Graph()
         
-        searchAgent = search.SearchAgent()
-        curatorAgent = CuratorAgent()
+        searchAgent = SearchAgent()
+        sourceCuratorAgent = SourceCuratorAgent()
+        scrapperAgent = WebScrapperAgent()
 
         workflow.add_node("search", searchAgent.run)
+        workflow.add_node("source_curate", sourceCuratorAgent.run)
+        workflow.add_node("web_scrapper", scrapperAgent.run)
+
         workflow.add_edge(START, "search")
-        workflow.add_edge("search", END)
+        workflow.add_edge("search", "source_curate")
+        workflow.add_edge("source_curate", "web_scrapper")
+        workflow.add_edge("web_scrapper", END)
         
         chain = workflow.compile()
-        chain.invoke({"query" : topics[0]})
+
+        result = {"query" : topics[0]}
+        chain.invoke(result)
+
+        return result
 
 
 
@@ -50,11 +61,10 @@ def generate_newspaper():
     data = request.json
     print("JSON data: ", data)
     print(type(data))
-    topics = data["topic"].split()
+    topics = data["topic"].split(",")
     masteragent = MasterAgent()
-    masteragent.run(topics)
-    response = jsonify({"message" : "Done"})
+    result = masteragent.run(topics)
+    response = jsonify({"message" : result })
     response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173")
 
     return response 
-# main()

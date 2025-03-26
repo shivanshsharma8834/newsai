@@ -2,18 +2,19 @@ import os
 from dotenv import load_dotenv
 from tavily import TavilyClient
 
-load_dotenv()
-tavilyAgent = TavilyClient(api_key=os.environ.get("TAVILY_API_KEY"))
+
+
 
 
 class SearchAgent:
 
     def __init__(self):
-        pass 
+        load_dotenv()
+        self.tavilyAgent = TavilyClient(api_key=os.environ.get("TAVILY_API_KEY"))
     
     def search_tavily(self, query: str):
 
-        results = tavilyAgent.search(query=query, topic="news", max_results=10, include_images=True)
+        results = self.tavilyAgent.search(query=query, topic="news", max_results=10, include_images=True)
         sources = results["results"]
         try:
             image = results["images"][0]
