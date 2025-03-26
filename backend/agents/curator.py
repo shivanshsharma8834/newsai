@@ -12,7 +12,7 @@ class SourceCuratorAgent:
         load_dotenv()
         self.llm = ChatGroq(
             api_key=os.environ.get("GROQ_API_KEY"),
-            model="llama-3.3-70b-versatile",
+            model="llama-3.2-3b-preview",
         )
 
     def curate_sources(self, query: str, sources: list):
@@ -20,7 +20,7 @@ class SourceCuratorAgent:
         message = [{
             "role" : "system",
             "content" : """ You are a professional newspaper editor. Your sole purpose is 
-            to choose 5 most relevant articles for me to read from a list of articles.
+            to choose 3 most relevant articles for me to read from a list of articles.
             Please return nothing but a list of the strings of the URLs in this structure: ['url1','url2','url3','url4','url5']."""
         }, {
             "role" : "user",

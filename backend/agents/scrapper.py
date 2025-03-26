@@ -1,6 +1,10 @@
 from ast import Dict
-from calendar import c
+import ast
+from calendar import c, prmonth
 import concurrent.futures
+import json
+import os
+from tabnanny import verbose
 from unittest import result
 from urllib import response
 from bs4 import BeautifulSoup
@@ -8,6 +12,7 @@ import concurrent
 from httpx import head
 from langchain_groq import ChatGroq
 import requests
+from scrapegraphai.graphs import SmartScraperGraph
 
 
 class WebScrapperAgent:
@@ -15,11 +20,22 @@ class WebScrapperAgent:
     def __init__(self):
         self.llm = ChatGroq(
             temperature=0.2,
-            model="llama-3.3-70b-versatile"
+            model="llama-3.2-3b-preview"
         ) 
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' 
         }
+
+        self.graph_config = {
+            "llm" : {
+                "model" : "ollama/llama3.2",
+                "api_key" : os.environ.get("GROQ_API_KEY")
+            },
+            "verbose" : True,
+            "headless" : False
+        }
+
+
 
     def fetch_html(self, url : str):
         """Fetch the html text from the url"""
@@ -52,9 +68,7 @@ class WebScrapperAgent:
                 "title": "Article title",
                 "author": "Author name if available",
                 "publish_date": "Publication date if available",
-                "summary": "3-sentence summary",
-                "key_points": ["list", "of", "main points"],
-                "keywords": ["list", "of", "important keywords"]
+                "article": "A Well formatted article of the scrapped web page",
             }
 
             """
@@ -64,10 +78,17 @@ class WebScrapperAgent:
             "content" : f"Article content: {text}"
         }]
 
-        return self.llm.invoke(message).content
+        result = self.llm.invoke(message).content
+        # try:
+        #     result = json.loads(result.split("json\n", 1)[1])
+        # except json.JSONDecodeError:
+        #     result = ast.literal_eval(result.split("json\n", 1)[1])
 
-
+        return result
         
+    def truncate_scrapped_data(self, text : str):
+
+        pass
 
     def process_url(self, url: str):
         """ Process a single URL """
@@ -85,15 +106,28 @@ class WebScrapperAgent:
         except Exception as e:
             return {"url" : url, "error" : f"Curation failed: {str(e)}"}
         
+    def smart_scrape_grapher(self, url: str):
+
+        prompt = """You are a professional newspaper article content curator. Extract useful information from the webpage, including a description of what the article is about, summary etc."""
+        scraper_graph = SmartScraperGraph(prompt=prompt, 
+                                          source=url,
+                                          config=self.graph_config
+                                          )
+        result = scraper_graph.run()
+
+        return result
+
+
     def run(self, article : Dict):
         """Run the scrapper agent"""
         urls = article['sources']
         result = None
-        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-            futures = [executor.submit(self.process_url, url) for url in urls]
-            result = [future.result() for future in concurrent.futures.as_completed(futures)]
+        # with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        #     futures = [executor.submit(self.process_url, url) for url in urls]
+        #     result = [future.result() for future in concurrent.futures.as_completed(futures)]
 
-        article['curated_articles'] = result 
+
+        article['curated_articles'] = self.process_url(urls[0]) 
         return article
            
 
