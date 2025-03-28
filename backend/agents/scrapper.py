@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 import concurrent
 from httpx import head
 from langchain_groq import ChatGroq
+from groq import Groq
 import requests
 from scrapegraphai.graphs import SmartScraperGraph
 
@@ -18,10 +19,11 @@ from scrapegraphai.graphs import SmartScraperGraph
 class WebScrapperAgent:
 
     def __init__(self):
-        self.llm = ChatGroq(
-            temperature=0.2,
-            model="llama-3.2-3b-preview"
-        ) 
+        # self.llm = ChatGroq(
+        #     temperature=0.2,
+        #     model="llama-3.2-3b-preview",
+        # )
+        self.llm = Groq(api_key=os.environ.get('GROQ_API_KEY')) 
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' 
         }
@@ -59,11 +61,11 @@ class WebScrapperAgent:
     
     def curate_content(self, text: str):
         """Curate an article content"""
-        message = [{
+        messages = [{
             "role" : "system",
             "content" : """ You are a professional content curator. Extract and structure key
             information from the provided article text. Return only JSON with the following structure:
-
+            Return the final JSON string between ''' ''' so that json.loads() function can load.
             {
                 "title": "Article title",
                 "author": "Author name if available",
@@ -76,13 +78,20 @@ class WebScrapperAgent:
         {
             "role" : "user",
             "content" : f"Article content: {text}"
-        }]
+        }
+        ]
 
-        result = self.llm.invoke(message).content
-        # try:
-        #     result = json.loads(result.split("json\n", 1)[1])
-        # except json.JSONDecodeError:
-        #     result = ast.literal_eval(result.split("json\n", 1)[1])
+        # result = self.llm.invoke(message).content
+        result = self.llm.chat.completions.create(
+            model='llama-3.3-70b-versatile',
+            messages=messages,
+            response_format={"type" : "json_object"}
+        )
+        result = result.choices[0].message.content
+        try:
+            result = json.loads(result)
+        except json.JSONDecodeError:
+            result = ast.literal_eval(result)
 
         return result
         

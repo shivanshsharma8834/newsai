@@ -1,4 +1,6 @@
 import { useState } from "react"
+import Header from "./components/header";
+import ArticleForm from "./components/articleForm";
 
 
 function App() {
@@ -32,28 +34,10 @@ function App() {
   }
   
   return (
-    <div className="bg-blue-400">
-      <form onSubmit={handleSubmit}> 
-        <input
-        type="text"
-        name="topic"
-        value={inputValue} 
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Enter news topic"
-        />
-        <button type="submit">Submit</button>
-      </form>
-      {response && <div>
-        Response: {
-          JSON.stringify(response)
-        }
-      </div>}
 
-      {error && <div>
-        Error: {
-          error
-        }  
-      </div>}
+    <div>
+      <Header/>
+      <ArticleForm/>
     </div>
   )
 }

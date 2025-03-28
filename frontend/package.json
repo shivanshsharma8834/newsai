@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.15",
+    "autoprefixer": "^10.4.21",
+    "postcss-cli": "^11.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-font": "^1.2.1",
     "tailwindcss": "^4.0.15"
   },
   "devDependencies": {
