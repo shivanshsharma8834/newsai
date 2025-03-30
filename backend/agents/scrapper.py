@@ -70,7 +70,7 @@ class WebScrapperAgent:
                 "title": "Article title",
                 "author": "Author name if available",
                 "publish_date": "Publication date if available",
-                "article": "A Well formatted article of the scrapped web page",
+                "article": "A Well formatted article of the scrapped web page, around 500 words at least",
             }
 
             """
@@ -137,6 +137,7 @@ class WebScrapperAgent:
 
 
         article['curated_articles'] = self.process_url(urls[0]) 
+        # article['curated_articles'] = result
         return article
            
 

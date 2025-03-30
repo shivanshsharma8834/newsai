@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Header from "./components/header";
 import ArticleForm from "./components/articleForm";
+import Footer from "./components/footer";
 
 
 function App() {
@@ -35,9 +36,10 @@ function App() {
   
   return (
 
-    <div>
+    <div className="bg-yellow-200 h-full">
       <Header/>
       <ArticleForm/>
+      <Footer/>
     </div>
   )
 }

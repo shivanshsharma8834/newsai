@@ -30,17 +30,19 @@ export default function ArticleForm() {
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input 
-                type="text"
-                name="topic"
-                value={inputTopic}
-                onChange={(e) => setInputTopic(e.target.value)}
-                placeholder="Enter news topic"
-                />
-                <button type="submit">Submit</button>
-            </form>
+        <div className="min-h-[750px]">
+            <div className="px-20">
+                <form onSubmit={handleSubmit} className="h-[100px]">
+                    <input 
+                    type="text"
+                    name="topic"
+                    value={inputTopic}
+                    onChange={(e) => setInputTopic(e.target.value)}
+                    placeholder="Enter news topic"
+                    />
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
             {
                 response && <ArticleContent response={response}/>
             }
