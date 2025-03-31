@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroui/progress": "^2.2.12",
     "@tailwindcss/vite": "^4.0.15",
     "autoprefixer": "^10.4.21",
     "postcss-cli": "^11.0.1",
