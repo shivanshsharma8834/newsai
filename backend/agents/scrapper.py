@@ -70,7 +70,7 @@ class WebScrapperAgent:
                 "title": "Article title",
                 "author": "Author name if available",
                 "publish_date": "Publication date if available",
-                "article": "A Well formatted article of the scrapped web page, around 500 words at least",
+                "article": "A Well formatted article of the scrapped web page, around 500 words at least and add spaces and newline characters so that the text is easily readable",
             }
 
             """
