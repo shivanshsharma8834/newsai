@@ -81,7 +81,7 @@ Contributions are welcomed! Feel free to open an issue or submit a PR.
 This project is licenced under the **MIT License**
 
 # This is a learning project. 
-Made with <3 by @felishelis
+Made with <3 by @shivanshsharma8834
    
 
 
